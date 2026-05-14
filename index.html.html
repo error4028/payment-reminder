@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PaymentChaser – Free Email Reminder Generator for Freelancers</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00C07F;
+    --green-dark: #009963;
+    --green-light: #E6FAF3;
+    --ink: #0D1117;
+    --ink-soft: #3A3F47;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --bg: #FAFAF9;
+    --white: #FFFFFF;
+    --red: #EF4444;
+    --amber: #F59E0B;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--white);
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--green); }
+  .header-tag {
+    background: var(--green);
+    color: var(--ink);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: .04em;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--ink);
+    padding: 60px 24px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,192,127,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px, 5vw, 52px);
+    color: var(--white);
+    line-height: 1.1;
+    max-width: 700px;
+    margin: 0 auto 16px;
+    letter-spacing: -1px;
+  }
+  .hero h1 em {
+    color: var(--green);
+    font-style: normal;
+  }
+  .hero p {
+    color: #9CA3AF;
+    font-size: 16px;
+    max-width: 480px;
+    margin: 0 auto 0;
+  }
+  .arrow-down {
+    display: block;
+    margin: 32px auto 0;
+    width: 36px; height: 36px;
+    border: 1.5px solid #374151;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #6B7280;
+    font-size: 16px;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)}
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  /* ── STEPS BADGE ── */
+  .step-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-light);
+    color: var(--green-dark);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    letter-spacing: .04em;
+  }
+  .step-dot {
+    width: 18px; height: 18px;
+    background: var(--green);
+    border-radius: 50%;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── FORM CARD ── */
+  .form-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+
+  .form-card h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .form-card .subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media(max-width:600px){ .form-grid { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    letter-spacing: .03em;
+    text-transform: uppercase;
+  }
+  label .req { color: var(--green); margin-left: 2px; }
+
+  input, select, textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--ink);
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(0,192,127,0.12);
+    background: var(--white);
+  }
+  textarea { resize: vertical; min-height: 70px; }
+
+  /* ── TONE SELECTOR ── */
+  .tone-group {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  @media(max-width:500px){ .tone-group { grid-template-columns: repeat(2,1fr); } }
+
+  .tone-btn {
+    padding: 10px 6px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg);
+    cursor: pointer;
+    text-align: center;
+    transition: all .2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .tone-btn .tone-icon { font-size: 18px; display: block; margin-bottom: 3px; }
+  .tone-btn .tone-name { font-size: 12px; font-weight: 500; color: var(--ink-soft); }
+  .tone-btn .tone-desc { font-size: 10px; color: var(--muted); }
+  .tone-btn.active {
+    border-color: var(--green);
+    background: var(--green-light);
+    box-shadow: 0 0 0 3px rgba(0,192,127,0.12);
+  }
+  .tone-btn.active .tone-name { color: var(--green-dark); }
+
+  /* ── GENERATE BUTTON ── */
+  .gen-btn {
+    width: 100%;
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--ink);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    letter-spacing: .02em;
+    transition: background .2s, transform .1s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .gen-btn:hover { background: #1a222e; }
+  .gen-btn:active { transform: scale(0.99); }
+  .gen-btn .btn-icon { font-size: 20px; }
+
+  /* ── ERROR MESSAGE ── */
+  .error-msg {
+    display: none;
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--red);
+    margin-top: 12px;
+  }
+  .error-msg.show { display: block; }
+
+  /* ── RESULTS ── */
+  #results { display: none; }
+  #results.show { display: block; }
+
+  .results-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .results-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .results-count {
+    background: var(--green);
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .email-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: box-shadow .2s;
+  }
+  .email-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+
+  .email-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .email-type {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .email-type .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .dot-1 { background: var(--green); }
+  .dot-2 { background: var(--amber); }
+  .dot-3 { background: var(--red); }
+
+  .email-type-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .email-type-sub { font-size: 11px; color: var(--muted); }
+
+  .copy-btn {
+    background: var(--ink);
+    color: var(--white);
+    border: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .2s, transform .1s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .copy-btn:hover { background: #1a222e; }
+  .copy-btn:active { transform: scale(0.97); }
+  .copy-btn.copied {
+    background: var(--green);
+  }
+
+  .email-body { padding: 20px; }
+  .email-subject {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .email-subject-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .email-content {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.75;
+    white-space: pre-line;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    background: var(--ink);
+    border-radius: 20px;
+    padding: 36px;
+    margin-bottom: 40px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 24px;
+    text-align: center;
+  }
+  @media(max-width:600px){ .how-section { grid-template-columns: 1fr; } }
+
+  .how-step .step-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--green);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .how-step h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    color: var(--white);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .how-step p { font-size: 12px; color: #9CA3AF; }
+
+  /* ── TIPS ── */
+  .tips-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 40px;
+  }
+  .tips-section h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--ink);
+  }
+  .tip {
+    display: flex; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .tip:last-child { margin-bottom: 0; }
+  .tip-icon {
+    width: 32px; height: 32px; min-width: 32px;
+    background: var(--green-light);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+  }
+  .tip-text strong { display: block; font-size: 13px; color: var(--ink); margin-bottom: 2px; }
+  .tip-text span { font-size: 12px; color: var(--muted); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    text-align: center;
+    padding: 28px 20px;
+    color: #6B7280;
+    font-size: 13px;
+  }
+  footer strong { color: var(--green); }
+
+  /* ── SCROLL TO RESULTS ── */
+  @keyframes fadeSlideUp {
+    from { opacity:0; transform: translateY(20px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  .animate-in { animation: fadeSlideUp 0.4s ease forwards; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">Payment<span>Chaser</span></div>
+  <div class="header-tag">FREE TOOL</div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Stop chasing payments.<br><em>Get paid faster.</em></h1>
+  <p>Free professional email reminder generator for freelancers worldwide. Polite. Firm. Done in seconds.</p>
+  <div class="arrow-down">↓</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <div class="how-step">
+      <div class="step-num">01</div>
+      <h3>Fill your details</h3>
+      <p>Enter your name, client name, invoice amount and how many days it's overdue</p>
+    </div>
+    <div class="how-step">
+      <div class="step-num">02</div>
+      <h3>Choose your tone</h3>
+      <p>Polite reminder? Firm follow-up? Strong final notice? You decide</p>
+    </div>
+    <div class="how-step">
+      <div class="step-num">03</div>
+      <h3>Copy &amp; send</h3>
+      <p>Get 3 ready-to-send email templates. Copy with one click and send</p>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card">
+    <div class="step-badge"><div class="step-dot">1</div> YOUR DETAILS</div>
+    <h2>Generate your reminder emails</h2>
+    <p class="subtitle">Fill in the fields below — all marked with <span style="color:var(--green)">✦</span> are required</p>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Your Name <span class="req">✦</span></label>
+        <input type="text" id="yourName" placeholder="e.g. Ahmed Khan">
+      </div>
+      <div class="field">
+        <label>Business Name <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+        <input type="text" id="bizName" placeholder="e.g. AK Design Studio">
+      </div>
+      <div class="field">
+        <label>Client Name <span class="req">✦</span></label>
+        <input type="text" id="clientName" placeholder="e.g. Sarah Ali">
+      </div>
+      <div class="field">
+        <label>Invoice Amount <span class="req">✦</span></label>
+        <input type="text" id="amount" placeholder="e.g. $500 or PKR 50,000">
+      </div>
+      <div class="field">
+        <label>Invoice Number <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+        <input type="text" id="invoiceNum" placeholder="e.g. INV-0042">
+      </div>
+      <div class="field">
+        <label>Days Overdue <span class="req">✦</span></label>
+        <input type="number" id="daysOverdue" placeholder="e.g. 14" min="1">
+      </div>
+      <div class="field full">
+        <label>Your Payment Details <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+        <input type="text" id="paymentDetails" placeholder="e.g. Bank: HBL · Account: 1234567890  OR  PayPal: you@email.com">
+      </div>
+      <div class="field full">
+        <label>Extra Notes <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+        <textarea id="extraNotes" placeholder="Anything else to mention? e.g. You mentioned you would pay by Friday..."></textarea>
+      </div>
+    </div>
+
+    <!-- TONE -->
+    <div style="margin-top:24px">
+      <div class="step-badge" style="margin-bottom:12px"><div class="step-dot">2</div> CHOOSE TONE</div>
+      <div class="tone-group">
+        <div class="tone-btn active" data-tone="polite" onclick="selectTone(this)">
+          <span class="tone-icon">😊</span>
+          <div class="tone-name">Polite</div>
+          <div class="tone-desc">Friendly reminder</div>
+        </div>
+        <div class="tone-btn" data-tone="friendly" onclick="selectTone(this)">
+          <span class="tone-icon">🤝</span>
+          <div class="tone-name">Friendly</div>
+          <div class="tone-desc">Warm but clear</div>
+        </div>
+        <div class="tone-btn" data-tone="firm" onclick="selectTone(this)">
+          <span class="tone-icon">💼</span>
+          <div class="tone-name">Firm</div>
+          <div class="tone-desc">Professional pressure</div>
+        </div>
+        <div class="tone-btn" data-tone="strong" onclick="selectTone(this)">
+          <span class="tone-icon">⚡</span>
+          <div class="tone-name">Strong</div>
+          <div class="tone-desc">Final notice</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="gen-btn" onclick="generate()">
+      <span class="btn-icon">✉️</span> Generate My Reminder Emails
+    </button>
+
+    <div class="error-msg" id="errorMsg">
+      Please fill in all required fields: Your Name, Client Name, Invoice Amount, and Days Overdue.
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="results-header">
+      <div class="step-badge" style="margin-bottom:0"><div class="step-dot">3</div> YOUR EMAILS ARE READY</div>
+      <div class="results-count">3 templates</div>
+    </div>
+
+    <div id="email1" class="email-card animate-in">
+      <div class="email-card-header">
+        <div class="email-type">
+          <div class="dot dot-1"></div>
+          <div>
+            <div class="email-type-name">Email 1 — Gentle Reminder</div>
+            <div class="email-type-sub">Send first. Assumes it was just forgotten.</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyEmail('content1', this)">Copy</button>
+      </div>
+      <div class="email-body">
+        <div class="email-subject">Subject line</div>
+        <div class="email-subject-text" id="subject1"></div>
+        <div class="email-subject">Body</div>
+        <div class="email-content" id="content1"></div>
+      </div>
+    </div>
+
+    <div id="email2" class="email-card animate-in" style="animation-delay:.1s">
+      <div class="email-card-header">
+        <div class="email-type">
+          <div class="dot dot-2"></div>
+          <div>
+            <div class="email-type-name">Email 2 — Follow-Up</div>
+            <div class="email-type-sub">Send 3–5 days after Email 1. More direct.</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyEmail('content2', this)">Copy</button>
+      </div>
+      <div class="email-body">
+        <div class="email-subject">Subject line</div>
+        <div class="email-subject-text" id="subject2"></div>
+        <div class="email-subject">Body</div>
+        <div class="email-content" id="content2"></div>
+      </div>
+    </div>
+
+    <div id="email3" class="email-card animate-in" style="animation-delay:.2s">
+      <div class="email-card-header">
+        <div class="email-type">
+          <div class="dot dot-3"></div>
+          <div>
+            <div class="email-type-name">Email 3 — Final Notice</div>
+            <div class="email-type-sub">Last resort. Clear deadline and consequences.</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyEmail('content3', this)">Copy</button>
+      </div>
+      <div class="email-body">
+        <div class="email-subject">Subject line</div>
+        <div class="email-subject-text" id="subject3"></div>
+        <div class="email-subject">Body</div>
+        <div class="email-content" id="content3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIPS -->
+  <div class="tips-section">
+    <h2>💡 Pro Tips for Getting Paid</h2>
+    <div class="tip">
+      <div class="tip-icon">⏰</div>
+      <div class="tip-text">
+        <strong>Send reminders at the right time</strong>
+        <span>Tuesday to Thursday mornings (10am–12pm) have the highest email open rates. Avoid Mondays and Fridays.</span>
+      </div>
+    </div>
+    <div class="tip">
+      <div class="tip-icon">🔗</div>
+      <div class="tip-text">
+        <strong>Always include a payment link</strong>
+        <span>Add your PayPal, Wise, Payoneer or bank details in every email. Make it as easy as possible to pay you.</span>
+      </div>
+    </div>
+    <div class="tip">
+      <div class="tip-icon">📎</div>
+      <div class="tip-text">
+        <strong>Attach the original invoice</strong>
+        <span>Clients sometimes claim they never received it. Attach the PDF every single time — no excuses.</span>
+      </div>
+    </div>
+    <div class="tip">
+      <div class="tip-icon">📅</div>
+      <div class="tip-text">
+        <strong>Always give a clear deadline</strong>
+        <span>Instead of "as soon as possible," write "by Friday, [date]." Specific dates create urgency and accountability.</span>
+      </div>
+    </div>
+    <div class="tip">
+      <div class="tip-icon">📋</div>
+      <div class="tip-text">
+        <strong>Use written contracts next time</strong>
+        <span>A simple contract with payment terms (e.g. net 14 days) protects you and reduces late payments by 60%.</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- FOOTER -->
+<footer>
+  <p>Built with ❤️ for freelancers everywhere · <strong>PaymentChaser</strong> is 100% free · No sign-up required</p>
+  <p style="margin-top:6px;font-size:11px">Share this tool with a freelancer friend who needs it 👇</p>
+</footer>
+
+<script>
+  let selectedTone = 'polite';
+
+  function selectTone(el) {
+    document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    selectedTone = el.dataset.tone;
+  }
+
+  function generate() {
+    const yourName     = document.getElementById('yourName').value.trim();
+    const bizName      = document.getElementById('bizName').value.trim();
+    const clientName   = document.getElementById('clientName').value.trim();
+    const amount       = document.getElementById('amount').value.trim();
+    const invoiceNum   = document.getElementById('invoiceNum').value.trim();
+    const daysOverdue  = document.getElementById('daysOverdue').value.trim();
+    const payment      = document.getElementById('paymentDetails').value.trim();
+    const extraNotes   = document.getElementById('extraNotes').value.trim();
+    const errorMsg     = document.getElementById('errorMsg');
+
+    // Validation
+    if (!yourName || !clientName || !amount || !daysOverdue) {
+      errorMsg.classList.add('show');
+      return;
+    }
+    errorMsg.classList.remove('show');
+
+    const senderName   = bizName ? `${yourName} (${bizName})` : yourName;
+    const invRef       = invoiceNum ? `Invoice #${invoiceNum}` : 'your invoice';
+    const payLine      = payment ? `\n\nPayment details:\n${payment}` : '';
+    const notesLine    = extraNotes ? `\n\nAdditional note: ${extraNotes}` : '';
+    const days         = parseInt(daysOverdue);
+    const dueDate      = getDueDate(days);
+
+    // ── TONE OPENERS ──
+    const openers = {
+      polite:   { open: 'I hope this message finds you well.', close: 'Thank you so much for your time, and I hope we can sort this out quickly!' },
+      friendly: { open: 'Hope you\'re doing great!', close: 'Looking forward to hearing from you soon. Thanks for being such a great client!' },
+      firm:     { open: 'I am writing to follow up on an outstanding payment.', close: 'I appreciate your prompt attention to this matter.' },
+      strong:   { open: 'I must bring an urgent matter to your immediate attention.', close: 'I expect this matter to be resolved by the deadline stated above.' }
+    };
+    const tone = openers[selectedTone];
+
+    // ── EMAIL 1: GENTLE REMINDER ──
+    document.getElementById('subject1').textContent =
+      invoiceNum
+        ? `Friendly reminder: Invoice #${invoiceNum} – ${amount}`
+        : `Friendly payment reminder – ${amount}`;
+
+    document.getElementById('content1').textContent =
+`Hi ${clientName},
+
+${tone.open}
+
+I just wanted to send a friendly reminder that ${invRef} for ${amount} was due ${days} day${days===1?'':'s'} ago${dueDate ? ` (on ${dueDate})` : ''}. I understand things can get busy, so I wanted to check in in case it slipped through the cracks.
+
+Could you please let me know when I can expect the payment?${payLine}${notesLine}
+
+${tone.close}
+
+Warm regards,
+${senderName}`;
+
+    // ── EMAIL 2: FOLLOW-UP ──
+    document.getElementById('subject2').textContent =
+      invoiceNum
+        ? `Second reminder: Invoice #${invoiceNum} still outstanding – ${amount}`
+        : `Second payment reminder – ${amount} still outstanding`;
+
+    document.getElementById('content2').textContent =
+`Hi ${clientName},
+
+I hope you're doing well. I'm following up on my previous message regarding ${invRef} for ${amount}, which is now ${days} day${days===1?'':'s'} overdue.
+
+I have yet to receive the payment or a response to my earlier email. Could you please either:
+
+  • Confirm when payment will be made, OR
+  • Let me know if there is any issue I can help resolve
+
+I would appreciate hearing from you by ${getDeadline(3)}.${payLine}${notesLine}
+
+Thank you for your attention to this matter.
+
+Best regards,
+${senderName}`;
+
+    // ── EMAIL 3: FINAL NOTICE ──
+    document.getElementById('subject3').textContent =
+      invoiceNum
+        ? `FINAL NOTICE: Invoice #${invoiceNum} – ${amount} – Action Required`
+        : `FINAL NOTICE: Payment of ${amount} – Immediate Action Required`;
+
+    document.getElementById('content3').textContent =
+`Dear ${clientName},
+
+${tone.open}
+
+This is a final notice regarding ${invRef} for ${amount}, which is now ${days} day${days===1?'':'s'} overdue. Despite my previous reminders, I have not received payment or a satisfactory response.
+
+I require full payment of ${amount} by ${getDeadline(5)}.
+
+Please be advised that if payment is not received by this date, I will be required to:
+
+  • Pause or terminate any ongoing work
+  • Refer this matter to a collections agency or take legal action
+  • Report this to freelancer platforms if applicable
+
+I sincerely hope we can resolve this without further escalation. If there is a genuine issue or dispute, please contact me immediately.${payLine}${notesLine}
+
+${tone.close}
+
+${senderName}`;
+
+    // Show results
+    const resultsEl = document.getElementById('results');
+    resultsEl.classList.add('show');
+    setTimeout(() => {
+      resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+
+  function getDueDate(daysAgo) {
+    const d = new Date();
+    d.setDate(d.getDate() - daysAgo);
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function getDeadline(daysFromNow) {
+    const d = new Date();
+    d.setDate(d.getDate() + daysFromNow);
+    return d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  function copyEmail(contentId, btn) {
+    const subject = document.getElementById(contentId.replace('content','subject')).textContent;
+    const body = document.getElementById(contentId).textContent;
+    const full = `Subject: ${subject}\n\n${body}`;
+    navigator.clipboard.writeText(full).then(() => {
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
